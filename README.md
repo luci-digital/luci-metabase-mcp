@@ -1,8 +1,8 @@
 # Metabase MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@jerichosequitin/metabase)](https://smithery.ai/server/@jerichosequitin/metabase)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/jerichosequitin/metabase-mcp)
 
-**Version**: 1.0.0
+**Version**: 1.0.1
 
 **Repository**: [luci-digital/luci-metabase-mcp](https://github.com/luci-digital/luci-metabase-mcp)
 
@@ -10,7 +10,7 @@
 
 A high-performance Model Context Protocol server for AI integration with Metabase analytics platforms. Features intelligent caching, response optimization, and comprehensive data access tools.
 
-**Available as a Desktop Extension (DXT) for Claude Desktop.**
+**Available as an MCP Bundle (MCPB) for Claude Desktop.**
 
 ---
 
@@ -42,17 +42,17 @@ We are deeply grateful for Jericho's pioneering work in making business intellig
 
 ## Installation Options
 
-#### Option 1: Desktop Extension (Recommended for Claude Desktop Users)
+#### Option 1: MCP Bundle (Recommended for Claude Desktop Users)
 
-1. Download `metabase-mcp.dxt` from [Releases](https://github.com/luci-digital/luci-metabase-mcp/releases)
-2. Open the `.dxt` file with Claude Desktop to install
+1. Download `metabase-mcp.mcpb` from [Releases](https://github.com/luci-digital/luci-metabase-mcp/releases)
+2. Open the `.mcpb` file with Claude Desktop to install
 3. Configure your Metabase credentials in Claude Desktop's extension settings:
    - **Metabase URL** (required)
    - **Authentication**: Choose either API key OR email/password
    - **Export Directory**: Customize where files are saved (defaults to Downloads/Metabase)
    - **Optional**: Log level, cache TTL, and request timeout settings
 
-##### Benefits of DXT Installation
+##### Benefits of MCP Bundle Installation
 
 - **Single-click installation**: No manual configuration files or command-line setup
 - **Automatic updates**: Claude Desktop manages extension updates
@@ -317,7 +317,7 @@ npm run inspector  # MCP Inspector for debugging
 npm run dxt:build
 ```
 
-Creates `metabase-mcp.dxt` ready for GitHub Releases.
+Creates `metabase-mcp.mcpb` ready for GitHub Releases.
 
 ## Documentation
 
