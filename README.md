@@ -55,7 +55,7 @@ We are deeply grateful for Jericho's pioneering work in making business intellig
 ##### Benefits of MCP Bundle Installation
 
 - **Single-click installation**: No manual configuration files or command-line setup
-- **Automatic updates**: Claude Desktop manages extension updates
+- **Automatic updates**: Claude Desktop manages bundle updates
 - **User-friendly settings**: Configure through Claude Desktop's UI
 - **Seamless integration**: Tools automatically available in your conversations
 
@@ -310,14 +310,14 @@ npm run test:coverage
 npm run inspector  # MCP Inspector for debugging
 ```
 
-### Building DXT Package
+### Building MCPB Package
 
 ```bash
 # Build for distribution
-npm run dxt:build
+npm run mcpb:build
 ```
 
-Creates `metabase-mcp.mcpb` ready for GitHub Releases.
+Creates `metabase-mcp-{version}.mcpb` (e.g., `metabase-mcp-1.0.1.mcpb`) ready for GitHub Releases.
 
 ## Documentation
 
