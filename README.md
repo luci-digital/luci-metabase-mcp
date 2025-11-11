@@ -4,17 +4,47 @@
 
 **Version**: 1.0.0
 
-**Author**: Jericho Sequitin (@jerichosequitin)
+**Repository**: [luci-digital/luci-metabase-mcp](https://github.com/luci-digital/luci-metabase-mcp)
+
+**Original Creator**: [Jericho Sequitin](https://github.com/jerichosequitin) (@jerichosequitin)
 
 A high-performance Model Context Protocol server for AI integration with Metabase analytics platforms. Features intelligent caching, response optimization, and comprehensive data access tools.
 
 **Available as a Desktop Extension (DXT) for Claude Desktop.**
 
+---
+
+## Acknowledgments
+
+This project builds upon the exceptional foundation created by **Jericho Sequitin** ([@jerichosequitin](https://github.com/jerichosequitin)). His original [Metabase MCP Server](https://github.com/jerichosequitin/metabase-mcp) demonstrated the powerful potential of combining AI agents with business intelligence through the Model Context Protocol.
+
+**Original Contributions by Jericho Sequitin:**
+- Core MCP server architecture and tool implementation
+- Response optimization achieving 80-90% token reduction
+- Multi-layer caching system with intelligent TTL management
+- Dual authentication support (API key and email/password)
+- Large dataset export capabilities (CSV, JSON, XLSX)
+- Comprehensive error handling with agent guidance
+- Production-ready testing infrastructure (235 tests, 80% coverage)
+- Desktop Extension (DXT) packaging for Claude Desktop
+
+**Luci Digital Enhancements:**
+- Comprehensive observability patterns and monitoring documentation
+- Benefits guide for stakeholder understanding
+- Enhanced agent communication patterns and security models
+- Personal AI Container integration architecture
+- Swift Container Plugin integration for containerized deployments
+- Extended documentation for enterprise adoption
+
+We are deeply grateful for Jericho's pioneering work in making business intelligence accessible to AI agents. This fork continues his vision while adding enterprise-grade features and comprehensive documentation for broader adoption.
+
+---
+
 ## Installation Options
 
 #### Option 1: Desktop Extension (Recommended for Claude Desktop Users)
 
-1. Download `metabase-mcp.dxt` from [Releases](https://github.com/jerichosequitin/metabase-mcp/releases)
+1. Download `metabase-mcp.dxt` from [Releases](https://github.com/luci-digital/luci-metabase-mcp/releases)
 2. Open the `.dxt` file with Claude Desktop to install
 3. Configure your Metabase credentials in Claude Desktop's extension settings:
    - **Metabase URL** (required)
@@ -144,8 +174,8 @@ LOG_LEVEL=info
 
 ```bash
 # Clone and build
-git clone https://github.com/jerichosequitin/metabase-mcp.git
-cd metabase-mcp
+git clone https://github.com/luci-digital/luci-metabase-mcp.git
+cd luci-metabase-mcp
 npm install
 npm run build
 ```
@@ -184,7 +214,7 @@ To integrate with Claude Desktop, you'll need to configure the MCP server in Cla
 {
   "mcpServers": {
     "metabase-mcp": {
-      "command": "/Users/your-username/path/to/metabase-mcp/build/src/index.js",
+      "command": "/Users/your-username/path/to/luci-metabase-mcp/build/src/index.js",
       "env": {
         "METABASE_URL": "https://your-metabase-instance.com",
         "METABASE_API_KEY": "your_api_key_here",
@@ -198,9 +228,9 @@ To integrate with Claude Desktop, you'll need to configure the MCP server in Cla
 ```
 
 #### Important Notes:
-- **Use absolute paths** for local development (e.g., `/Users/username/Documents/metabase-mcp/build/src/index.js`)
+- **Use absolute paths** for local development (e.g., `/Users/username/Documents/luci-metabase-mcp/build/src/index.js`)
 - **Replace `your-username`** with your actual username
-- **Replace `path/to/metabase-mcp`** with the actual path to your cloned repository
+- **Replace `path/to/luci-metabase-mcp`** with the actual path to your cloned repository
 - **No need to run the server manually** - Claude Desktop will automatically invoke and manage the MCP server via STDIO
 - **Never commit real credentials** to version control
 - **Restart Claude Desktop** after making configuration changes
@@ -317,3 +347,11 @@ See [AGENTS.md](AGENTS.md) for complete agent integration documentation.
 ## License
 
 This project is licensed under the MIT License.
+
+## Project Lineage
+
+This repository is a fork of [Jericho Sequitin's original Metabase MCP Server](https://github.com/jerichosequitin/metabase-mcp), enhanced with enterprise features, comprehensive documentation, and advanced observability patterns. Both projects remain open source and share the goal of making business intelligence accessible to AI agents.
+
+**For the original implementation**, see: https://github.com/jerichosequitin/metabase-mcp
+
+**For enterprise enhancements and extended documentation**, see: https://github.com/luci-digital/luci-metabase-mcp (this repository)
