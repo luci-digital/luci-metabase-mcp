@@ -70,3 +70,12 @@ luci_onepass_repos/logs/
 .lighthouseci/
 .lighthouse/
 lhci-data/
+
+# Unified Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/data/
+frontend/.vite/
+frontend/.env
+frontend/*.db
+frontend/*.db-journal
