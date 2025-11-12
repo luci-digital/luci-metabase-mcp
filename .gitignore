@@ -57,3 +57,11 @@ luci_onepass_repos/logs/
 .passkey/secrets/
 .passkey/*.key
 .passkey/*.pem
+
+# Sync Service
+.sync-service/config.json
+.sync-service/logs/
+.sync-service/device-status.json
+.sync-service/sync-status.json
+.sync-service/devices.json
+.sync-service/*.pid
