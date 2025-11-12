@@ -45,3 +45,15 @@ temp/
 
 # MCPB package files
 *.mcpb
+
+# 1Password Integration
+credentials.json
+secrets.json
+*.pem
+*.key
+*.crt
+.op-config.local.json
+luci_onepass_repos/logs/
+.passkey/secrets/
+.passkey/*.key
+.passkey/*.pem

@@ -1,0 +1,32 @@
+{
+  "repos": [
+    {
+      "name": "luci-onepass-os",
+      "url": "https://github.com/luci-digital/luci-onepass-os.git",
+      "description": "1Password for Open Source management"
+    },
+    {
+      "name": "luci-onepassword-operator",
+      "url": "https://github.com/luci-digital/luci-onepassword-operator.git",
+      "description": "Kubernetes operator for 1Password"
+    },
+    {
+      "name": "luci-passage-swift",
+      "url": "https://github.com/luci-digital/luci-passage-swift.git",
+      "description": "Swift SDK for passwordless auth"
+    }
+  ],
+  "onepassword": {
+    "connect_host": "${OP_CONNECT_HOST:-}",
+    "connect_token": "${OP_CONNECT_TOKEN:-}",
+    "vault": "${OP_VAULT:-}"
+  },
+  "paths": {
+    "repos_dir": "luci_onepass_repos/repos",
+    "logs_dir": "luci_onepass_repos/logs"
+  },
+  "auto_update": {
+    "enabled": true,
+    "interval_minutes": 60
+  }
+}

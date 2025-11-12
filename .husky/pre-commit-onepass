@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+# Pre-commit hook for 1Password secret validation
+
+echo "Checking for secrets..."
+
+# Run secret validation
+if bash scripts/onepass/validate-secrets.sh; then
+    echo "✓ Secret validation passed"
+else
+    echo "✗ Secret validation failed"
+    exit 1
+fi

@@ -3,6 +3,15 @@
 
 echo "Running pre-commit checks..."
 
+# Run secret validation first
+echo "Checking for secrets..."
+if bash scripts/onepass/validate-secrets.sh; then
+    echo "✓ Secret validation passed"
+else
+    echo "✗ Secret validation failed"
+    exit 1
+fi
+
 # Run type checking
 echo "Type checking..."
 npm run type-check
