@@ -1,0 +1,186 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [main, master, develop, claude/*]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      audit_type:
+        description: 'Audit type'
+        required: false
+        type: choice
+        options:
+          - full
+          - security-only
+          - performance-only
+        default: full
+
+jobs:
+  lighthouse-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Load secrets from 1Password
+        uses: 1password/load-secrets-action@v1
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          METABASE_URL: op://Development/Metabase/url
+          METABASE_API_KEY: op://Development/Metabase/api_key
+
+      - name: Build project
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Run secret exposure detection (pre-audit)
+        run: |
+          echo "🔍 Scanning for exposed secrets..."
+          node scripts/lighthouse/secret-detector.js
+        continue-on-error: false
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.13.x
+
+      - name: Run Lighthouse CI
+        run: |
+          lhci autorun --config=lighthouserc.js
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Run secret exposure detection (post-audit)
+        if: always()
+        run: |
+          echo "🔍 Scanning Lighthouse results for secrets..."
+
+          # Find latest Lighthouse results
+          RESULTS_FILE=$(find .lighthouseci -name "*.json" -type f | head -n 1)
+
+          if [ -n "$RESULTS_FILE" ]; then
+            node scripts/lighthouse/secret-detector.js "$RESULTS_FILE"
+          else
+            echo "⚠️ No Lighthouse results found"
+          fi
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: |
+            .lighthouseci
+            .lighthouse/secret-detection-report.json
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            let comment = '## 🔦 Lighthouse CI Results\n\n';
+
+            // Read secret detection report
+            try {
+              const secretReport = JSON.parse(fs.readFileSync('.lighthouse/secret-detection-report.json', 'utf8'));
+
+              comment += '### 🔐 Secret Exposure Detection\n\n';
+
+              if (secretReport.length === 0) {
+                comment += '✅ No secrets found!\n\n';
+              } else {
+                const bySeverity = {
+                  critical: secretReport.filter(f => f.severity === 'critical'),
+                  high: secretReport.filter(f => f.severity === 'high'),
+                  medium: secretReport.filter(f => f.severity === 'medium'),
+                  low: secretReport.filter(f => f.severity === 'low'),
+                };
+
+                comment += '| Severity | Count |\n';
+                comment += '|----------|-------|\n';
+                comment += `| 🔴 Critical | ${bySeverity.critical.length} |\n`;
+                comment += `| 🟠 High | ${bySeverity.high.length} |\n`;
+                comment += `| 🟡 Medium | ${bySeverity.medium.length} |\n`;
+                comment += `| 🟢 Low | ${bySeverity.low.length} |\n\n`;
+
+                if (bySeverity.critical.length > 0 || bySeverity.high.length > 0) {
+                  comment += '⚠️ **Critical or high severity secrets detected! Please review.**\n\n';
+                }
+              }
+            } catch (error) {
+              comment += '⚠️ Could not read secret detection report\n\n';
+            }
+
+            comment += '### 📊 Performance Metrics\n\n';
+            comment += 'Full Lighthouse reports attached as artifacts.\n';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Notify on-prem devices of audit results
+        if: success()
+        env:
+          ONPREM_WEBHOOK_URLS: ${{ secrets.ONPREM_WEBHOOK_URLS }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          echo "📡 Notifying on-premises devices of successful audit..."
+
+          IFS=',' read -ra URLS <<< "$ONPREM_WEBHOOK_URLS"
+
+          for url in "${URLS[@]}"; do
+            echo "Notifying: $url"
+
+            PAYLOAD=$(cat <<EOF
+          {
+            "action": "audit_passed",
+            "workflow": "lighthouse-ci",
+            "repository": "${{ github.repository }}",
+            "sender": "${{ github.actor }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "audit_results": {
+              "passed": true,
+              "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+          }
+          EOF
+          )
+
+            SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
+
+            curl -s -X POST "$url" \
+              -H "Content-Type: application/json" \
+              -H "X-GitHub-Event: workflow_run" \
+              -H "X-Hub-Signature-256: sha256=$SIGNATURE" \
+              -d "$PAYLOAD" || echo "Failed to notify $url"
+          done
+
+  quality-gate:
+    needs: lighthouse-ci
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Quality gate check
+        run: |
+          echo "✅ Quality gate passed!"
+          echo "All Lighthouse CI audits completed successfully"
+          echo "No critical security issues detected"
+          echo "Performance budgets met"
