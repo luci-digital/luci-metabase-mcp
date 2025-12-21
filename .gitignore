@@ -3,6 +3,13 @@ dist/
 build/
 *.tsbuildinfo
 
+# Nix
+result
+result-*
+.direnv/
+.nix-profile
+.nix-defexpr
+
 # Dependencies
 node_modules/
 npm-debug.log
