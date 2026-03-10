@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { z } from 'zod';
 import { homedir } from 'os';
 import { join } from 'path';
+import { execSync } from 'child_process';
 
 // Helper function to expand system variables
 function expandSystemVariables(path: string | undefined): string {
@@ -58,7 +59,30 @@ const envSchema = z
 // Parse and validate environment variables
 function validateEnvironment() {
   try {
-    return envSchema.parse(process.env);
+    // Intercept and resolve any 1Password 'op://' URIs before schema validation
+    const resolveOnePassword = (val: string | undefined): string | undefined => {
+      if (val && val.startsWith('op://')) {
+        try {
+          return execSync(`op read "${val}"`, { encoding: 'utf-8' }).trim();
+        } catch (e: any) {
+          console.error(`[1Password] Failed to resolve ${val}: ${e.message}`);
+          return val;
+        }
+      }
+      return val;
+    };
+
+    const resolvedEnv = { ...process.env };
+
+    // Resolve potentially secret fields
+    if (resolvedEnv.METABASE_API_KEY) {
+      resolvedEnv.METABASE_API_KEY = resolveOnePassword(resolvedEnv.METABASE_API_KEY);
+    }
+    if (resolvedEnv.METABASE_PASSWORD) {
+      resolvedEnv.METABASE_PASSWORD = resolveOnePassword(resolvedEnv.METABASE_PASSWORD);
+    }
+
+    return envSchema.parse(resolvedEnv);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessages = error.errors.map(err => `${err.path.join('.')}: ${err.message}`);
