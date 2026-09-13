@@ -146,12 +146,14 @@ The project includes MCPB (MCP Bundle) package management for easy distribution.
 
 ### Building MCPB Packages
 ```bash
-# Build versioned MCPB package
+# Build versioned MCPB package (packs with npx @anthropic-ai/mcpb, no global install)
 npm run mcpb:build
 
-# Validate manifest structure
+# Validate manifest structure and user_config wiring (scripts/validate-manifest.cjs)
 npm run mcpb:validate
 ```
+
+Claude Desktop installs the bundle from Settings > Extensions. The hand-edited alternative is `examples/claude_desktop_config.example.json`. Desktop passes blank optional settings as empty strings, which `validateEnvironment` treats as unset.
 
 ### Platform Compatibility
 The MCPB package supports cross-platform deployment:

@@ -23,6 +23,7 @@ Historical record of releases and structural changes. Format validated by
 - Dockerfile reduced to a single internal-only stage with OCI labels and Genesis Bond defaults; no ports, no registry.
 - CI consolidated into one workflow (Node 20 and 22, SHA-pinned actions); MCPB bundles are uploaded as workflow artifacts on tags, never published as releases.
 - Refreshed the `.lucia/threads` cids for `modules/scm/luci-vcs/src/bin/mcp.rs` and `modules/scm/luci-vcs/examples/mcp.json.example` after lucia_tooling_omzsh corrected their stale `core/vcs/` paths (luci-digital/lucia_tooling_omzsh#14); thread ids are unchanged and identical across the three repos.
+- Claude Desktop wiring: bundle install and config-file routes documented (README, `docs/MCP-BUNDLE.md`, `docs/onepassword.md`), new `examples/claude_desktop_config.example.json`, empty optional environment variables are treated as unset (the Desktop extension UI sends blank fields), `npm run mcpb:build` packs through `npx` with no global CLI, and `mcpb:validate` checks the manifest against `package.json` and the `user_config` wiring.
 
 ## 2026-03 March Updates
 

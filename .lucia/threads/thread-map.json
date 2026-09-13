@@ -147,7 +147,7 @@
       },
       {
         "did": "did:luci:luci-metabase-mcp",
-        "cid": "bafk-blake3-4f085cdb0749665263d31440530f0d798db4e5d07b1834f7c259d3e6cf9bad11",
+        "cid": "bafk-blake3-2e224039346b0103ecbaf1d3db9a59b73978cb5ad4f616e279eef3863008be5e",
         "frequency_hz": 528,
         "timestamp_ns": 0,
         "path": "docs/MCP-BUNDLE.md"

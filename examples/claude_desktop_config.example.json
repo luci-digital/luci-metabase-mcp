@@ -1,0 +1,14 @@
+{
+  "_comment": "Merge into claude_desktop_config.json: %APPDATA%\\Claude\\ on Windows, ~/Library/Application Support/Claude/ on macOS, ~/.config/Claude/ on Linux. Build first: npm run build:fast. Replace the path with your clone location (forward slashes work on Windows). Claude Desktop does not read the repo .env, so values here must be literal, or install the .mcpb bundle instead and enter them in Settings > Extensions. Restart Claude Desktop after editing.",
+  "mcpServers": {
+    "luci-metabase-mcp": {
+      "command": "node",
+      "args": ["C:/Users/you/source/repos/luci-digital/luci-metabase-mcp/build/src/index.js"],
+      "env": {
+        "METABASE_URL": "https://your-metabase-instance.com",
+        "METABASE_API_KEY": "mb_your_api_key",
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}

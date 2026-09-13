@@ -40,6 +40,23 @@ Only `METABASE_URL`, `METABASE_API_KEY`, `METABASE_USER_EMAIL`, and
 `METABASE_PASSWORD` are resolved. In a container, mount the CLI or prefer
 workflow 1 and pass `--env-file .env`.
 
+## GUI-launched clients (Claude Desktop)
+
+A GUI client does not start the server from the repository, so workflow 1's
+`.env` is never read, and workflow 2 only works if the Desktop process can
+find `op` on its PATH with a valid session. Options, most robust first:
+
+1. Install the MCP Bundle (`npm run mcpb:build`) and enter the values in
+   Claude Desktop's extension settings; sensitive fields go to the OS
+   keychain.
+2. Put literal values in `claude_desktop_config.json`
+   (`examples/claude_desktop_config.example.json`), obtained with
+   `op read op://Lucia-AI-Secrets/Metabase/api_key`. The file is outside the
+   repository and never committed.
+3. Keep `op://` references in the config and set `OP_SERVICE_ACCOUNT_TOKEN`
+   as a user-level environment variable so workflow 2 can resolve them
+   without an interactive sign-in.
+
 ## Pre-commit protection
 
 `scripts/validate-secrets.sh` (run by the husky pre-commit hook) blocks

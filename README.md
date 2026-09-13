@@ -78,9 +78,46 @@ or copy `examples/mcp.json.example` to `.mcp.json` in your project:
 }
 ```
 
-Claude Desktop uses the same block in `claude_desktop_config.json`
-(`~/Library/Application Support/Claude/` on macOS, `%APPDATA%/Claude/` on
-Windows). Restart the client after editing.
+## Wire into Claude Desktop
+
+### Install the bundle (recommended)
+
+```sh
+npm run mcpb:build       # writes luci-metabase-mcp-1.1.0.mcpb
+```
+
+In Claude Desktop open Settings, then Extensions, then Advanced settings,
+and choose Install Extension. Pick the `.mcpb` file, then fill in the
+Metabase URL and API key when prompted. The bundle is self-locating and the
+sensitive fields are stored in the operating system keychain, so nothing
+else needs editing. Leave the email and password fields empty when using an
+API key.
+
+### Or edit claude_desktop_config.json
+
+Copy `examples/claude_desktop_config.example.json` into the config file:
+
+| OS | Path |
+|----|------|
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+
+Replace the path in `args` with your clone location (forward slashes work
+on Windows) and restart Claude Desktop. If Desktop reports the server as
+failed with no output, `node` is probably not on the PATH of GUI
+applications; use the full path to the `node` executable as `command`.
+
+### Secrets and GUI clients
+
+Claude Desktop does not run from the repository, so it never reads the
+`.env` written by `npm run env:inject` (which is a bash script and needs Git
+Bash on Windows). `op://` references in the config only work when the
+1Password CLI is on the PATH of the Desktop process and has a session, for
+example through `OP_SERVICE_ACCOUNT_TOKEN` set as a user-level environment
+variable. Otherwise paste literal values obtained with
+`op read op://Lucia-AI-Secrets/Metabase/api_key`, or use the bundle route
+above. See [docs/onepassword.md](docs/onepassword.md).
 
 ## Wire into Zed
 
