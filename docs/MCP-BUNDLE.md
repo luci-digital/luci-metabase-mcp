@@ -31,6 +31,12 @@ npm run build:fast
 npm run env:inject          # resolves op://Lucia-AI-Secrets/Metabase/* into .env
 ```
 
+### Install into Claude Desktop
+```bash
+npm run mcpb:build          # luci-metabase-mcp-<version>.mcpb in the repo root
+```
+Claude Desktop: Settings > Extensions > Advanced settings > Install Extension, choose the `.mcpb`, then enter the Metabase URL and API key. Sensitive fields are kept in the OS keychain. Alternatively copy `examples/claude_desktop_config.example.json` into `claude_desktop_config.json` (`%APPDATA%\Claude\` on Windows, `~/Library/Application Support/Claude/` on macOS, `~/.config/Claude/` on Linux) with literal values; Desktop does not read the repo `.env`.
+
 ### Register with Claude Code
 ```bash
 claude mcp add luci-metabase-mcp -- node "$PWD/build/src/index.js"
@@ -83,6 +89,9 @@ Read the `Recovery Action` and `Troubleshooting Steps` in the result; `Retryable
 
 ### Server exits immediately in a container
 Pass the generated env file: `docker run --rm -i --env-file .env luci-metabase-mcp:local`.
+
+### Claude Desktop shows the server as failed
+Open Settings > Developer and read `mcp-server-luci-metabase-mcp.log`. Common causes: `node` is not on the PATH of GUI applications (use the full executable path as `command`); the config relies on the repo `.env`, which Desktop never reads (use literal values or the bundle); an `op://` value with no 1Password CLI or session in the Desktop process; a server older than 1.1.0 rejecting the blank optional fields the extension UI sends.
 
 ## License
 

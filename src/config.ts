@@ -67,6 +67,15 @@ export const SECRET_ENV_KEYS = [
 export type ValidatedConfig = z.infer<typeof envSchema>;
 
 /**
+ * Treat empty-string variables as unset. GUI clients such as Claude Desktop
+ * pass every declared setting, blank ones included, so an API-key-only
+ * bundle install would otherwise fail on METABASE_USER_EMAIL="".
+ */
+function withoutEmptyValues(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  return Object.fromEntries(Object.entries(env).filter(([, value]) => value !== ''));
+}
+
+/**
  * Resolve op:// references and validate the environment. Throws with a
  * readable message on any failure; the server must not start half-configured.
  */
@@ -74,7 +83,11 @@ export function validateEnvironment(
   env: NodeJS.ProcessEnv = process.env,
   onePassword: OnePasswordOptions = {}
 ): ValidatedConfig {
-  const resolvedEnv = resolveEnvironmentSecrets(env, SECRET_ENV_KEYS, onePassword);
+  const resolvedEnv = resolveEnvironmentSecrets(
+    withoutEmptyValues(env),
+    SECRET_ENV_KEYS,
+    onePassword
+  );
   const result = envSchema.safeParse(resolvedEnv);
   if (!result.success) {
     const errorMessages = result.error.issues.map(

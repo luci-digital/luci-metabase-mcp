@@ -22,7 +22,7 @@
       },
       {
         "did": "did:luci:lucia-tooling-omzsh",
-        "cid": "bafk-blake3-e0cf5b004e8ba43346f72caccbe336465fe53d5d3c779cfcd3d2dcb6d24a3dc6",
+        "cid": "bafk-blake3-f6358fb71de3d3f6fe26fcc2bbd6aa09f71a6242d2c16298c1089f00ec2156a0",
         "frequency_hz": 528,
         "timestamp_ns": 0,
         "path": "modules/scm/luci-vcs/src/bin/mcp.rs"
@@ -96,7 +96,7 @@
       },
       {
         "did": "did:luci:lucia-tooling-omzsh",
-        "cid": "bafk-blake3-a390a3c8f802538b274695a1ba488f7ae5511f9289df26b5e6085bd44982aaf3",
+        "cid": "bafk-blake3-2935f8494bd5ea0c1cd6d24ff78f03f02a348e75b7eefc5dbcab2a5c547125e7",
         "frequency_hz": 528,
         "timestamp_ns": 0,
         "path": "modules/scm/luci-vcs/examples/mcp.json.example"
@@ -147,7 +147,7 @@
       },
       {
         "did": "did:luci:luci-metabase-mcp",
-        "cid": "bafk-blake3-4f085cdb0749665263d31440530f0d798db4e5d07b1834f7c259d3e6cf9bad11",
+        "cid": "bafk-blake3-2e224039346b0103ecbaf1d3db9a59b73978cb5ad4f616e279eef3863008be5e",
         "frequency_hz": 528,
         "timestamp_ns": 0,
         "path": "docs/MCP-BUNDLE.md"

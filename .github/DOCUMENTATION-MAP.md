@@ -12,7 +12,7 @@ luci-metabase-mcp/
 │   ├── onepassword.md            secret references and injection
 │   ├── enhanced-error-handling.md error categories and agent guidance
 │   └── responses/                raw versus optimized response references
-├── examples/                     Claude Code and Zed wiring
+├── examples/                     Claude Code, Claude Desktop, and Zed wiring
 └── .lucia/                       LuciVerse identity, peers, thread links
 ```
 
