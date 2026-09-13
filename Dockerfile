@@ -20,7 +20,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci --ignore-scripts
 
-COPY tsconfig.build.json ./
+COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
 RUN npx tsc -p tsconfig.build.json \
  && chmod +x build/src/index.js \
