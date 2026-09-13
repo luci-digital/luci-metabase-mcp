@@ -1,36 +1,24 @@
 # Build and distribution files
-dist/
 build/
+dist/
 *.tsbuildinfo
-
-# Nix
-result
-result-*
-.direnv/
-.nix-profile
-.nix-defexpr
 
 # Dependencies
 node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Logs
-logs/
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Coverage directory used by tools like jest
+# Environment variables (generate .env with: npm run env:inject)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Coverage
 coverage/
 .nyc_output/
 
@@ -53,36 +41,9 @@ temp/
 # MCPB package files
 *.mcpb
 
-# 1Password Integration
+# Secrets that must never be committed
 credentials.json
 secrets.json
 *.pem
 *.key
 *.crt
-.op-config.local.json
-luci_onepass_repos/logs/
-.passkey/secrets/
-.passkey/*.key
-.passkey/*.pem
-
-# Sync Service
-.sync-service/config.json
-.sync-service/logs/
-.sync-service/device-status.json
-.sync-service/sync-status.json
-.sync-service/devices.json
-.sync-service/*.pid
-
-# Lighthouse CI
-.lighthouseci/
-.lighthouse/
-lhci-data/
-
-# Unified Frontend
-frontend/node_modules/
-frontend/dist/
-frontend/data/
-frontend/.vite/
-frontend/.env
-frontend/*.db
-frontend/*.db-journal
