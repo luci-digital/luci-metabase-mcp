@@ -6,7 +6,7 @@ import 'dotenv/config';
 import { z } from 'zod';
 import { homedir } from 'os';
 import { join } from 'path';
-import { execSync } from 'child_process';
+import { resolveEnvironmentSecrets, OnePasswordOptions } from './utils/onePassword.js';
 
 // Helper function to expand system variables
 function expandSystemVariables(path: string | undefined): string {
@@ -56,44 +56,37 @@ const envSchema = z
     path: ['METABASE_API_KEY'],
   });
 
-// Parse and validate environment variables
-function validateEnvironment() {
-  try {
-    // Intercept and resolve any 1Password 'op://' URIs before schema validation
-    const resolveOnePassword = (val: string | undefined): string | undefined => {
-      if (val && val.startsWith('op://')) {
-        try {
-          return execSync(`op read "${val}"`, { encoding: 'utf-8' }).trim();
-        } catch (e: any) {
-          console.error(`[1Password] Failed to resolve ${val}: ${e.message}`);
-          return val;
-        }
-      }
-      return val;
-    };
+// Environment variables that may hold 1Password references
+export const SECRET_ENV_KEYS = [
+  'METABASE_URL',
+  'METABASE_API_KEY',
+  'METABASE_USER_EMAIL',
+  'METABASE_PASSWORD',
+] as const;
 
-    const resolvedEnv = { ...process.env };
+export type ValidatedConfig = z.infer<typeof envSchema>;
 
-    // Resolve potentially secret fields
-    if (resolvedEnv.METABASE_API_KEY) {
-      resolvedEnv.METABASE_API_KEY = resolveOnePassword(resolvedEnv.METABASE_API_KEY);
-    }
-    if (resolvedEnv.METABASE_PASSWORD) {
-      resolvedEnv.METABASE_PASSWORD = resolveOnePassword(resolvedEnv.METABASE_PASSWORD);
-    }
-
-    return envSchema.parse(resolvedEnv);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorMessages = error.errors.map(err => `${err.path.join('.')}: ${err.message}`);
-      throw new Error(`Environment validation failed:\n${errorMessages.join('\n')}`);
-    }
-    throw error;
+/**
+ * Resolve op:// references and validate the environment. Throws with a
+ * readable message on any failure; the server must not start half-configured.
+ */
+export function validateEnvironment(
+  env: NodeJS.ProcessEnv = process.env,
+  onePassword: OnePasswordOptions = {}
+): ValidatedConfig {
+  const resolvedEnv = resolveEnvironmentSecrets(env, SECRET_ENV_KEYS, onePassword);
+  const result = envSchema.safeParse(resolvedEnv);
+  if (!result.success) {
+    const errorMessages = result.error.issues.map(
+      issue => `${issue.path.join('.')}: ${issue.message}`
+    );
+    throw new Error(`Environment validation failed:\n${errorMessages.join('\n')}`);
   }
+  return result.data;
 }
 
 // Create default test config for test environment
-function createTestConfig() {
+export function createTestConfig(): ValidatedConfig {
   return {
     METABASE_URL: 'http://localhost:3000',
     METABASE_API_KEY: 'test-api-key',

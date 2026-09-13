@@ -18,10 +18,10 @@ export default defineConfig({
       // Measured floor with a real (non-global) threshold config; raise as
       // coverage improves, never lower.
       thresholds: {
-        branches: 73,
-        functions: 85,
-        lines: 78,
-        statements: 78,
+        branches: 74,
+        functions: 90,
+        lines: 79,
+        statements: 79,
       },
     },
     include: ['src/**/*.test.ts', 'tests/**/*.test.ts'],
