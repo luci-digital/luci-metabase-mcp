@@ -1,15 +1,7 @@
+import { Logger, type LogLevelName } from './logger.js';
 import { config, AuthMethod } from './config.js';
 import { ErrorCode, McpError } from './types/core.js';
 import { NetworkErrorFactory, createErrorFromHttpResponse } from './utils/errorFactory.js';
-
-// Logger level enum
-enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
-  FATAL = 'fatal',
-}
 
 // Interface for tracking data source in API responses
 export interface CachedResponse<T> {
@@ -88,58 +80,22 @@ export class MetabaseApiClient {
   }
 
   // Enhanced logging utilities
-  private log(level: LogLevel, message: string, data?: unknown, error?: Error) {
-    const timestamp = new Date().toISOString();
-
-    const logMessage: Record<string, unknown> = {
-      timestamp,
-      level,
-      message,
-    };
-
-    if (data !== undefined) {
-      logMessage.data = data;
-    }
-
-    if (error) {
-      logMessage.error = error.message || 'Unknown error';
-      logMessage.stack = error.stack;
-    }
-
-    // Output structured log for machine processing
-    console.error(JSON.stringify(logMessage));
-
-    // Output human-readable format
-    try {
-      const logPrefix = level.toUpperCase();
-
-      if (error) {
-        console.error(
-          `[${timestamp}] ${logPrefix}: ${message} - ${error.message || 'Unknown error'}`
-        );
-      } else {
-        console.error(`[${timestamp}] ${logPrefix}: ${message}`);
-      }
-    } catch (e) {
-      // Ignore if console is not available
-    }
-  }
+  private readonly logger = new Logger(config.LOG_LEVEL as LogLevelName, 'metabase-mcp:api');
 
   private logDebug(message: string, data?: unknown) {
-    this.log(LogLevel.DEBUG, message, data);
+    this.logger.debug(message, data);
   }
 
   private logInfo(message: string, data?: unknown) {
-    this.log(LogLevel.INFO, message, data);
+    this.logger.info(message, data);
   }
 
   private logWarn(message: string, data?: unknown, error?: Error) {
-    this.log(LogLevel.WARN, message, data, error);
+    this.logger.warn(message, data, error);
   }
 
   private logError(message: string, error: unknown) {
-    const errorObj = error instanceof Error ? error : new Error(String(error));
-    this.log(LogLevel.ERROR, message, undefined, errorObj);
+    this.logger.error(message, error);
   }
 
   /**

@@ -1,6 +1,6 @@
 {
-    "recommendations": [
-        "runem.lit-plugin",
-        "stateful.runme"
-    ]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
+  ]
 }

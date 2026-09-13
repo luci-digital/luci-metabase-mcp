@@ -1,0 +1,23 @@
+{
+  "thread_id": "thread-68722955e05b398a56417594c8108de375726856d9e85c80ed409bfc4b9145a7",
+  "parts": [
+    "mcp",
+    "client-wiring"
+  ],
+  "links": [
+    {
+      "did": "did:luci:luci-metabase-mcp",
+      "cid": "bafk-blake3-718b05e2b0d8ff61e42cdaaf2bcd42bd224ecd7dc5a92110db252311e4819088",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "examples/mcp.json.example"
+    },
+    {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "cid": "bafk-blake3-a390a3c8f802538b274695a1ba488f7ae5511f9289df26b5e6085bd44982aaf3",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "modules/scm/luci-vcs/examples/mcp.json.example"
+    }
+  ]
+}

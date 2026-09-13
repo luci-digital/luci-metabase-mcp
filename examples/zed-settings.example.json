@@ -1,0 +1,14 @@
+{
+  "//": "Merge into ~/.config/zed/settings.json. Build first: npm run build:fast",
+  "context_servers": {
+    "luci-metabase-mcp": {
+      "source": "custom",
+      "command": "node",
+      "args": ["/absolute/path/to/luci-metabase-mcp/build/src/index.js"],
+      "env": {
+        "METABASE_URL": "op://Lucia-AI-Secrets/Metabase/url",
+        "METABASE_API_KEY": "op://Lucia-AI-Secrets/Metabase/api_key"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+[registry]
+repo = "luci-metabase-mcp"
+frequency_hz = 528
+total_agents = 1
+
+[[agent]]
+name = "metabase-mcp"
+did = "did:luci:luci-metabase-mcp:server"
+frequency_hz = 528
+role = "Metabase analytics MCP server (stdio, internal)"
+tier = "COMN"
+status = "active"

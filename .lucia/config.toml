@@ -1,0 +1,44 @@
+# .lucia/config.toml - LuciVerse VCS identity for luci-metabase-mcp
+# Loadable by luci-vcs (lucia_tooling_omzsh/modules/scm/luci-vcs, LuciaConfig).
+# LDS: 700.528 | COMN (analytics MCP) | Genesis Bond: ACTIVE @ 528 Hz
+
+[lucia]
+version = "0.1.0"
+
+[identity]
+repo_name = "luci-metabase-mcp"
+# Tooling-repo DID style (did:luci:<dns-slug>). The system-config style
+# did:lucidigital:<repo>:<ula-ipv6> needs a ULA allocation from the
+# fd00:741:1::/64 mesh, which has not been made for this repo yet.
+did = "did:luci:luci-metabase-mcp"
+frequency_hz = 528
+lds_tier = "700.528"
+genesis_bond = "ACTIVE"
+
+[peers]
+system_config = { did = "did:lucidigital:luciverse-system-config:fd00:741:1::cab9", frequency_hz = 741 }
+tooling = { did = "did:luci:lucia-tooling-omzsh", frequency_hz = 528 }
+
+# Repository access vault (per-repo) and the vault that holds the Metabase
+# runtime secrets referenced from .env.example.
+[vault]
+enabled = true
+vault_backend = "1password"
+vault_name = "Repository-Access-luci-metabase-mcp"
+secrets_vault = "Lucia-AI-Secrets"
+token_ttl_hours = 24
+primary_override = "daryl-harris"
+
+[storage]
+block_size = 1048576
+hash = "blake3"
+compression = "zstd"
+compression_level = 3
+
+[wal]
+segment_max_bytes = 67108864
+rotation_count = 8
+
+[compaction]
+interval_hours = 24
+min_block_size = 262144

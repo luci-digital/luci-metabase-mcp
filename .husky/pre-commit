@@ -1,31 +1,18 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 echo "Running pre-commit checks..."
 
-# Run secret validation first
 echo "Checking for secrets..."
-if bash scripts/onepass/validate-secrets.sh; then
-    echo "✓ Secret validation passed"
-else
-    echo "✗ Secret validation failed"
-    exit 1
-fi
+bash scripts/validate-secrets.sh
 
-# Run type checking
 echo "Type checking..."
 npm run type-check
 
-# Run linting
 echo "Linting..."
 npm run lint
 
-# Run formatting check
 echo "Checking formatting..."
 npm run format:check
 
-# Run tests
 echo "Running tests..."
 npm test
 
-echo "All pre-commit checks passed!"
+echo "All pre-commit checks passed."

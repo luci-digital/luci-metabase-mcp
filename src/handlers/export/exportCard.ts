@@ -307,7 +307,7 @@ export async function exportCard(
         },
       ],
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw handleApiError(
       error,
       {

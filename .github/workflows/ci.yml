@@ -1,155 +1,165 @@
 name: CI
 
+# Validate, test, build, and smoke the stdio server. Modeled on the
+# aifam-mcp workflow in lucia_tooling_omzsh: read-only permissions,
+# hardened runner, SHA-pinned actions. Nothing here publishes or pushes.
 on:
-  push:
-    branches: [master, develop]
   pull_request:
-    branches: [master, develop]
+    branches: [master]
+  push:
+    branches: [master]
+    tags: ["v*"]
+
+concurrency:
+  group: ci-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: "0"
 
 jobs:
   test:
+    name: validate, test, build (node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
-
+        node-version: [20.x, 22.x]
     steps:
-    - uses: actions/checkout@v4
+      - name: Harden the runner (audit all outbound calls)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Check out
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
 
-    - name: Run type checking
-      run: npm run type-check
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Check formatting
-      run: npm run format:check
+      - name: Type-check, lint, format
+        run: npm run validate
 
-    - name: Run linting (allow warnings)
-      run: npm run lint || echo "Linting completed with warnings"
+      - name: CHANGELOG format
+        run: npm run verify:changelog
 
-    - name: Run unit tests
-      run: npm test
+      - name: Shell syntax
+        run: bash -n scripts/*.sh
 
-    - name: Run tests with coverage
-      run: npm run test:coverage
+      - name: Tests with coverage gate
+        run: npm run test:coverage
 
+      - name: Build
+        run: npm run build:fast
 
+      - name: Server answers initialize over stdio
+        env:
+          NODE_ENV: production
+          METABASE_URL: https://test.metabase.local
+          METABASE_API_KEY: ci-dummy-key
+        run: |
+          echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}' \
+            | timeout 15s node build/src/index.js 2>/dev/null \
+            | head -1 \
+            | grep -q '"serverInfo":{"name":"luci-metabase-mcp"'
 
-    - name: Build project
-      run: npm run build:fast
+      - name: Server fails loudly without configuration
+        env:
+          NODE_ENV: production
+        run: |
+          set +e
+          out=$(timeout 10s node build/src/index.js 2>&1 </dev/null)
+          rc=$?
+          set -e
+          echo "$out" | grep -q "Environment validation failed"
+          test "$rc" -ne 0
 
-    - name: Test MCP server can start
-      env:
-        METABASE_URL: "https://test.metabase.local"
-        METABASE_API_KEY: "test-api-key-for-ci"
-        METABASE_USER_EMAIL: "test@example.com"
-        METABASE_PASSWORD: "test-password"
-        NODE_ENV: "test"
-      run: |
-        if command -v timeout >/dev/null 2>&1; then
-          timeout 10s node build/src/index.js || test $? = 124
-        elif command -v gtimeout >/dev/null 2>&1; then
-          gtimeout 10s node build/src/index.js || test $? = 124
-        else
-          # Fallback for systems without timeout command
-          node build/src/index.js &
-          SERVER_PID=$!
-          sleep 5
-          if kill -0 $SERVER_PID 2>/dev/null; then
-            echo "MCP server started successfully"
-            kill $SERVER_PID
-          else
-            echo "MCP server failed to start"
-            exit 1
-          fi
-        fi
+      - name: Server rejects a malformed 1Password reference
+        env:
+          NODE_ENV: production
+          METABASE_URL: https://test.metabase.local
+          METABASE_API_KEY: "op://bad"
+        run: |
+          set +e
+          out=$(timeout 10s node build/src/index.js 2>&1 </dev/null)
+          rc=$?
+          set -e
+          echo "$out" | grep -q "Invalid 1Password secret reference"
+          test "$rc" -ne 0
 
-  build-docker:
+      - name: MCPB manifest
+        run: npm run mcpb:validate
+
+  container:
+    name: internal container image
     runs-on: ubuntu-latest
     needs: test
-
     steps:
-    - uses: actions/checkout@v4
+      - name: Harden the runner (audit all outbound calls)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
 
-    - name: Build Docker image
-      run: docker build -t metabase-mcp .
+      - name: Check out
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-    - name: Test Docker image
-      run: |
-        # Test that the Docker image can be created and runs
-        # Since this is an MCP server that uses stdio, we test it differently
-        echo "Testing Docker container startup and environment validation..."
+      - name: Build image (never pushed)
+        run: docker build -t luci-metabase-mcp:local .
 
-        # Test 1: Container starts and validates environment correctly
-        echo "Test 1: Environment validation test..."
-        if echo '{"jsonrpc": "2.0", "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "test", "version": "1.0.0"}}, "id": 1}' | \
-           timeout 10s docker run --rm -i \
-             -e METABASE_URL=https://test.metabase.local \
-             -e METABASE_API_KEY=test-api-key \
-             -e NODE_ENV=test \
-             metabase-mcp | head -1; then
-          echo "✅ Test 1 passed: Container starts and accepts input"
-        else
-          echo "❌ Test 1 failed: Container could not start or process input"
-          exit 1
-        fi
+      - name: Container answers initialize over stdio
+        run: |
+          echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}' \
+            | timeout 20s docker run --rm -i -e METABASE_URL=https://test.metabase.local -e METABASE_API_KEY=ci-dummy luci-metabase-mcp:local 2>/dev/null \
+            | head -1 \
+            | grep -q '"serverInfo"'
 
-        # Test 2: Container fails properly with missing environment variables
-        echo "Test 2: Missing environment variables test..."
-        if timeout 5s docker run --rm metabase-mcp 2>&1 | grep -q "Environment validation failed"; then
-          echo "✅ Test 2 passed: Container properly validates environment variables"
-        else
-          echo "❌ Test 2 failed: Container should fail with missing environment variables"
-          exit 1
-        fi
+      - name: Container fails without configuration
+        run: |
+          set +e
+          out=$(timeout 10s docker run --rm luci-metabase-mcp:local 2>&1)
+          set -e
+          echo "$out" | grep -q "Environment validation failed"
 
-        echo "🎉 All Docker tests passed successfully!"
-
-  quality-gates:
+  mcpb:
+    name: MCP bundle artifact (tags only)
     runs-on: ubuntu-latest
     needs: test
-
+    if: startsWith(github.ref, 'refs/tags/v')
     steps:
-    - uses: actions/checkout@v4
+      - name: Harden the runner (audit all outbound calls)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
 
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
+      - name: Check out
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.x
+          cache: npm
 
-    - name: Run comprehensive test suite
-      run: npm run test:coverage
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Check test coverage thresholds
-      run: |
-        echo "Verifying test coverage meets quality gates..."
-        # Coverage thresholds are enforced by vitest.config.ts
-        # This step will fail if coverage is below 80%
-        npm run test:coverage
+      - name: Install the MCPB CLI
+        run: npm install -g @anthropic-ai/mcpb
 
-    - name: Generate test report
-      run: |
-        echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
-        echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
-        echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+      - name: Build bundle
+        run: npm run build:fast && node scripts/build-mcpb.cjs && ls -la *.mcpb
 
-        # Count test files and tests
-        TEST_FILES=$(find tests -name "*.test.ts" | wc -l)
-        TOTAL_TESTS=$(npm test 2>&1 | grep -o '[0-9]* passed' | head -1 | grep -o '[0-9]*' || echo "0")
-
-        echo "| Test Files | $TEST_FILES |" >> $GITHUB_STEP_SUMMARY
-        echo "| Total Tests | $TOTAL_TESTS |" >> $GITHUB_STEP_SUMMARY
-        echo "| Coverage Threshold | 80% |" >> $GITHUB_STEP_SUMMARY
-        echo "| Status | ✅ All tests passing |" >> $GITHUB_STEP_SUMMARY
+      - name: Upload bundle as a workflow artifact (internal distribution)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: luci-metabase-mcp-mcpb
+          path: "*.mcpb"
+          retention-days: 30

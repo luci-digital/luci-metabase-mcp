@@ -1,0 +1,16 @@
+{
+  "thread_id": "thread-fd9f5a56d5949ddb42aa24ad89b1d68f2ac2c70b6d0c5f93392402f31391e080",
+  "parts": [
+    "mcp",
+    "server-pattern"
+  ],
+  "links": [
+    {
+      "did": "did:lucidigital:luciverse-system-config:fd00:741:1::cab9",
+      "cid": "bafk-blake3-fc716a836073dc7bb993c53d11b1673a49926d35c9db06ce17ad0c0402dc4110",
+      "frequency_hz": 741,
+      "timestamp_ns": 0,
+      "path": "scripts/luciverse-mcp-server.py"
+    }
+  ]
+}

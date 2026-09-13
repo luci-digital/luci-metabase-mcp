@@ -1,0 +1,7 @@
+[handle]
+repo_name = "luci-metabase-mcp"
+did = "did:luci:luci-metabase-mcp"
+dns_slug = "luci-metabase-mcp"
+frequency_hz = 528
+lds_tier = "700.528"
+genesis_bond_cid = ""

@@ -54,3 +54,9 @@ vitest.config.ts
 
 # Tests (keep for Docker build, but could be excluded in production)
 # tests/
+
+# LuciVerse identity metadata
+.lucia
+.luci-metadata
+.lds-vault-access
+examples

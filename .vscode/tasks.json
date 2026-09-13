@@ -10,7 +10,7 @@
       },
       "problemMatcher": ["$tsc"],
       "label": "npm: build",
-      "detail": "tsc && 권한 설정"
+      "detail": "tsc and set the executable bit"
     },
     {
       "type": "npm",
@@ -26,14 +26,14 @@
       "script": "lint",
       "problemMatcher": ["$eslint-stylish"],
       "label": "npm: lint",
-      "detail": "eslint 코드 검사"
+      "detail": "eslint source check"
     },
     {
       "type": "npm",
       "script": "dev",
       "problemMatcher": [],
       "label": "npm: dev",
-      "detail": "빌드 후 실행"
+      "detail": "build then run"
     }
   ]
 }

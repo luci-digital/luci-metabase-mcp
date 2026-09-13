@@ -1,0 +1,16 @@
+{
+  "thread_id": "thread-3dc954609605b3ab75986eb4e0bcba5c89143685b1d72842454d63524b0897af",
+  "parts": [
+    "mcp",
+    "secrets-op-inject"
+  ],
+  "links": [
+    {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "cid": "bafk-blake3-2ffc46f08b787a8d83b5d73715d8dfdaf91a3d06d3fd2b3742c9db35036f928f",
+      "frequency_hz": 963,
+      "timestamp_ns": 0,
+      "path": "modules/vault/config/vault.toml"
+    }
+  ]
+}

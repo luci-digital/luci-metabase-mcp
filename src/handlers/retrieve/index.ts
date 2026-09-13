@@ -1,5 +1,4 @@
-import { z } from 'zod';
-import { CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import type { CallToolRequest } from '@modelcontextprotocol/sdk/types.js';
 import { MetabaseApiClient, CachedResponse } from '../../api.js';
 import { ErrorCode, McpError } from '../../types/core.js';
 import {
@@ -33,7 +32,7 @@ import {
 } from './optimizers.js';
 
 export async function handleRetrieve(
-  request: z.infer<typeof CallToolRequestSchema>,
+  request: CallToolRequest,
   requestId: string,
   apiClient: MetabaseApiClient,
   logDebug: (message: string, data?: unknown) => void,
@@ -528,7 +527,7 @@ export async function handleRetrieve(
         },
       ],
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw handleApiError(
       error,
       {

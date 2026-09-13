@@ -1,0 +1,30 @@
+{
+  "thread_id": "thread-fd9f5a56d5949ddb42aa24ad89b1d68f2ac2c70b6d0c5f93392402f31391e080",
+  "parts": [
+    "mcp",
+    "server-pattern"
+  ],
+  "links": [
+    {
+      "did": "did:luci:luci-metabase-mcp",
+      "cid": "bafk-blake3-2859fd8aab9277cd27c639835b4e2636a27d7e10db25f753df5a837453366119",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "src/server.ts"
+    },
+    {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "cid": "bafk-blake3-2ec7e07ba6583cf571d584e72bb7386cd28cd4c859786c05d1d976ae9fc91859",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "aifam-mcp/src/server.ts"
+    },
+    {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "cid": "bafk-blake3-e0cf5b004e8ba43346f72caccbe336465fe53d5d3c779cfcd3d2dcb6d24a3dc6",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "modules/scm/luci-vcs/src/bin/mcp.rs"
+    }
+  ]
+}

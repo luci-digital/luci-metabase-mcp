@@ -1,0 +1,63 @@
+{
+  "version": "0.1.0",
+  "description": "Cross-repo thread specification consumed by scripts/lucia-threads.mjs. Each thread links content-addressed blocks (blake3 of the file at the path) across repositories by DID and frequency, in the luci-vcs ThreadIndex format.",
+  "repos": {
+    "metabase": {
+      "did": "did:luci:luci-metabase-mcp",
+      "frequency_hz": 528,
+      "root_env": "LUCI_METABASE_MCP_ROOT",
+      "default_root": "."
+    },
+    "tooling": {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "frequency_hz": 528,
+      "root_env": "LUCI_TOOLING_ROOT",
+      "default_root": "../lucia_tooling_omzsh"
+    },
+    "system_config": {
+      "did": "did:lucidigital:luciverse-system-config:fd00:741:1::cab9",
+      "frequency_hz": 741,
+      "root_env": "LUCI_SYSTEM_CONFIG_ROOT",
+      "default_root": "../luciverse-system-config"
+    }
+  },
+  "threads": [
+    {
+      "parts": ["mcp", "server-pattern"],
+      "links": [
+        { "repo": "metabase", "path": "src/server.ts" },
+        { "repo": "tooling", "path": "aifam-mcp/src/server.ts" },
+        { "repo": "tooling", "path": "modules/scm/luci-vcs/src/bin/mcp.rs" },
+        { "repo": "system_config", "path": "scripts/luciverse-mcp-server.py" }
+      ]
+    },
+    {
+      "parts": ["mcp", "secrets-op-inject"],
+      "links": [
+        { "repo": "metabase", "path": ".env.example" },
+        { "repo": "metabase", "path": "src/utils/onePassword.ts" },
+        { "repo": "tooling", "path": "aifam-mcp/.env.example" },
+        { "repo": "tooling", "path": "scripts/init-env-with-op.sh" },
+        { "repo": "tooling", "path": "modules/vault/config/vault.toml", "frequency_hz": 963 }
+      ]
+    },
+    {
+      "parts": ["mcp", "client-wiring"],
+      "links": [
+        { "repo": "metabase", "path": "examples/mcp.json.example" },
+        { "repo": "tooling", "path": "modules/scm/luci-vcs/examples/mcp.json.example" },
+        { "repo": "system_config", "path": "documentation/MCP_SERVER_PATTERN.md" }
+      ]
+    },
+    {
+      "parts": ["mcp", "bundles"],
+      "links": [
+        { "repo": "tooling", "path": ".mcp-bundles/SHELL-CONFIG.md" },
+        { "repo": "tooling", "path": ".mcp-bundles/SCM-TOOLS.md" },
+        { "repo": "tooling", "path": ".mcp-bundles/WEB-TOOLS.md" },
+        { "repo": "tooling", "path": ".mcp-bundles/ORCHESTRATION-TOOLS.md" },
+        { "repo": "metabase", "path": "docs/MCP-BUNDLE.md" }
+      ]
+    }
+  ]
+}
