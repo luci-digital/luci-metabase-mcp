@@ -1,10 +1,9 @@
-import { z } from 'zod';
-import { CallToolRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import type { CallToolRequest } from '@modelcontextprotocol/sdk/types.js';
 import { MetabaseApiClient } from '../api.js';
 import { handleApiError, validateEnumValue } from '../utils/index.js';
 
 export function handleClearCache(
-  request: z.infer<typeof CallToolRequestSchema>,
+  request: CallToolRequest,
   apiClient: MetabaseApiClient,
   logInfo: (message: string, data?: unknown) => void,
   logWarn: (message: string, data?: unknown, error?: Error) => void,
@@ -166,7 +165,7 @@ export function handleClearCache(
         },
       ],
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw handleApiError(
       error,
       {

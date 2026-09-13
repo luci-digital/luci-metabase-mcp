@@ -311,7 +311,7 @@ export async function exportSqlQuery(
         },
       ],
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw handleApiError(
       error,
       {

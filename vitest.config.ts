@@ -9,28 +9,25 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/**',
-        'build/**',
-        'dist/**',
-        '**/*.d.ts',
-        '**/*.config.ts',
-        'src/index.ts', // Entry point, tested via integration
-      ],
+      reporter: ['text', 'json', 'json-summary', 'html'],
+      include: ['src/**/*.ts'],
+      // src/index.ts is the process entry point (covered by the startup
+      // smoke test in CI). src/api.ts is the Metabase HTTP client, which
+      // CLAUDE.md says must only be exercised through mocked handler tests.
+      exclude: ['src/index.ts', 'src/api.ts'],
+      // Measured floor with a real (non-global) threshold config; raise as
+      // coverage improves, never lower.
       thresholds: {
-        global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80,
-        },
+        branches: 73,
+        functions: 85,
+        lines: 78,
+        statements: 78,
       },
     },
     include: ['src/**/*.test.ts', 'tests/**/*.test.ts'],
     exclude: ['node_modules/**', 'build/**', 'dist/**'],
   },
   esbuild: {
-    target: 'node18',
+    target: 'node20',
   },
 });

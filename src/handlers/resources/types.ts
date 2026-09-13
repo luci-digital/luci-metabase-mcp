@@ -1,14 +1,11 @@
-import { z } from 'zod';
-import {
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
-  ListResourceTemplatesRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import type { TextResourceContents } from '@modelcontextprotocol/sdk/types.js';
 
-// Type definitions for resource handlers
-export type ListResourcesRequest = z.infer<typeof ListResourcesRequestSchema>;
-export type ReadResourceRequest = z.infer<typeof ReadResourceRequestSchema>;
-export type ListResourceTemplatesRequest = z.infer<typeof ListResourceTemplatesRequestSchema>;
+// Request types come straight from the MCP SDK
+export type {
+  ListResourcesRequest,
+  ReadResourceRequest,
+  ListResourceTemplatesRequest,
+} from '@modelcontextprotocol/sdk/types.js';
 
 // Resource template definition
 export interface ResourceTemplate {
@@ -18,13 +15,8 @@ export interface ResourceTemplate {
   description: string;
 }
 
-// Resource content definition
-export interface ResourceContent {
-  uri: string;
-  mimeType: string;
-  text?: string;
-  blob?: string;
-}
+// Resource content definition (text resources only)
+export type ResourceContent = TextResourceContents;
 
 // Resource definition
 export interface Resource {
