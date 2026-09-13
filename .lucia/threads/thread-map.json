@@ -1,0 +1,157 @@
+{
+  "thread-fd9f5a56d5949ddb42aa24ad89b1d68f2ac2c70b6d0c5f93392402f31391e080": {
+    "thread_id": "thread-fd9f5a56d5949ddb42aa24ad89b1d68f2ac2c70b6d0c5f93392402f31391e080",
+    "parts": [
+      "mcp",
+      "server-pattern"
+    ],
+    "links": [
+      {
+        "did": "did:luci:luci-metabase-mcp",
+        "cid": "bafk-blake3-2859fd8aab9277cd27c639835b4e2636a27d7e10db25f753df5a837453366119",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "src/server.ts"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-2ec7e07ba6583cf571d584e72bb7386cd28cd4c859786c05d1d976ae9fc91859",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "aifam-mcp/src/server.ts"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-e0cf5b004e8ba43346f72caccbe336465fe53d5d3c779cfcd3d2dcb6d24a3dc6",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "modules/scm/luci-vcs/src/bin/mcp.rs"
+      },
+      {
+        "did": "did:lucidigital:luciverse-system-config:fd00:741:1::cab9",
+        "cid": "bafk-blake3-fc716a836073dc7bb993c53d11b1673a49926d35c9db06ce17ad0c0402dc4110",
+        "frequency_hz": 741,
+        "timestamp_ns": 0,
+        "path": "scripts/luciverse-mcp-server.py"
+      }
+    ]
+  },
+  "thread-3dc954609605b3ab75986eb4e0bcba5c89143685b1d72842454d63524b0897af": {
+    "thread_id": "thread-3dc954609605b3ab75986eb4e0bcba5c89143685b1d72842454d63524b0897af",
+    "parts": [
+      "mcp",
+      "secrets-op-inject"
+    ],
+    "links": [
+      {
+        "did": "did:luci:luci-metabase-mcp",
+        "cid": "bafk-blake3-d4fc010232361fe592d3a5810e3ddc3e1976ff90a254408edcd62049b289f911",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": ".env.example"
+      },
+      {
+        "did": "did:luci:luci-metabase-mcp",
+        "cid": "bafk-blake3-874a12eeb05c65b7dd5b648fee533b963b6d6886243f03a2e7490f822c3a09a6",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "src/utils/onePassword.ts"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-cfd051aa6f5671a04ef3ed2b6700b6fbf8f21a7c43eb93265f81c77c6f359e5c",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "aifam-mcp/.env.example"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-58e09fdb45855c5f41e3de810c04d14ad4e17472289bea02e7aea99416e40a67",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "scripts/init-env-with-op.sh"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-2ffc46f08b787a8d83b5d73715d8dfdaf91a3d06d3fd2b3742c9db35036f928f",
+        "frequency_hz": 963,
+        "timestamp_ns": 0,
+        "path": "modules/vault/config/vault.toml"
+      }
+    ]
+  },
+  "thread-68722955e05b398a56417594c8108de375726856d9e85c80ed409bfc4b9145a7": {
+    "thread_id": "thread-68722955e05b398a56417594c8108de375726856d9e85c80ed409bfc4b9145a7",
+    "parts": [
+      "mcp",
+      "client-wiring"
+    ],
+    "links": [
+      {
+        "did": "did:luci:luci-metabase-mcp",
+        "cid": "bafk-blake3-718b05e2b0d8ff61e42cdaaf2bcd42bd224ecd7dc5a92110db252311e4819088",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "examples/mcp.json.example"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-a390a3c8f802538b274695a1ba488f7ae5511f9289df26b5e6085bd44982aaf3",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "modules/scm/luci-vcs/examples/mcp.json.example"
+      },
+      {
+        "did": "did:lucidigital:luciverse-system-config:fd00:741:1::cab9",
+        "cid": "bafk-blake3-5c21a9f87b0d29618ad9350c66b33770a0fb7056ce07570ddd08c36f7f1e682b",
+        "frequency_hz": 741,
+        "timestamp_ns": 0,
+        "path": "documentation/MCP_SERVER_PATTERN.md"
+      }
+    ]
+  },
+  "thread-4193818d9a6d0b674e4e1b68126816cb794b1107a813c3becd3fd48419d6bdd5": {
+    "thread_id": "thread-4193818d9a6d0b674e4e1b68126816cb794b1107a813c3becd3fd48419d6bdd5",
+    "parts": [
+      "mcp",
+      "bundles"
+    ],
+    "links": [
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-45e49a366a1d3760683d18004a969935ee080dbf3c54466d46edcde94338d7db",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": ".mcp-bundles/SHELL-CONFIG.md"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-1e647dff3ecf2cd5126650c0106d8a26b03c27409eb329c8b6e263d81e4aa701",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": ".mcp-bundles/SCM-TOOLS.md"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-480ee88a667fe6af5aef6999361e264f299cca225fe13a4ec4839f60a79d71e1",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": ".mcp-bundles/WEB-TOOLS.md"
+      },
+      {
+        "did": "did:luci:lucia-tooling-omzsh",
+        "cid": "bafk-blake3-f92aca3983ef02de03122f47e27bcfb378704629d2359149f3ffdaf2f5df7563",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": ".mcp-bundles/ORCHESTRATION-TOOLS.md"
+      },
+      {
+        "did": "did:luci:luci-metabase-mcp",
+        "cid": "bafk-blake3-4f085cdb0749665263d31440530f0d798db4e5d07b1834f7c259d3e6cf9bad11",
+        "frequency_hz": 528,
+        "timestamp_ns": 0,
+        "path": "docs/MCP-BUNDLE.md"
+      }
+    ]
+  }
+}

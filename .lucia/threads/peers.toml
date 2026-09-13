@@ -1,0 +1,11 @@
+[[peer]]
+name = "luciverse-system-config"
+did = "did:lucidigital:luciverse-system-config:fd00:741:1::cab9"
+frequency_hz = 741
+lds_tier = "000.000.00"
+
+[[peer]]
+name = "lucia_tooling_omzsh"
+did = "did:luci:lucia-tooling-omzsh"
+frequency_hz = 528
+lds_tier = "800.000"

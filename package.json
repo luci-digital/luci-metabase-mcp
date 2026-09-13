@@ -1,24 +1,42 @@
 {
-  "name": "@jericho/metabase-mcp",
-  "version": "1.0.1",
-  "description": "A custom Model Context Protocol server for Metabase integration - Jericho's version",
+  "name": "@luci-digital/luci-metabase-mcp",
+  "version": "1.1.0",
+  "description": "Model Context Protocol server for Metabase analytics (LuciVerse COMN tier, 528 Hz). Internal, stdio-only reference pattern.",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "author": {
-    "name": "Jericho Sequitin",
-    "url": "https://github.com/jerichosequitin"
+    "name": "Luci Digital",
+    "url": "https://github.com/luci-digital"
+  },
+  "contributors": [
+    {
+      "name": "Jericho Sequitin",
+      "url": "https://github.com/jerichosequitin"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luci-digital/luci-metabase-mcp.git"
+  },
+  "homepage": "https://github.com/luci-digital/luci-metabase-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/luci-digital/luci-metabase-mcp/issues"
   },
   "bin": {
-    "metabase-mcp": "./build/src/index.js"
+    "luci-metabase-mcp": "./build/src/index.js"
   },
   "files": [
-    "build"
+    "build",
+    "README.md",
+    "ARCHITECTURE.md",
+    ".env.example"
   ],
   "scripts": {
     "build": "npm run validate && tsc && npm test && node -e \"require('fs').chmodSync('build/src/index.js', '755')\"",
     "build:clean": "rm -rf build && npm run build",
     "build:fast": "tsc && node -e \"require('fs').chmodSync('build/src/index.js', '755')\"",
-    "prepare": "npm run build:fast && husky install",
+    "prepare": "husky && npm run build:fast",
     "watch": "tsc --watch",
     "inspector": "npx @modelcontextprotocol/inspector build/src/index.js",
     "start": "node build/src/index.js",
@@ -30,14 +48,17 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "type-check": "tsc --noEmit",
     "validate": "npm run type-check && npm run lint && npm run format:check",
+    "verify": "npm run validate && npm run verify:changelog",
+    "verify:changelog": "bash scripts/check-changelog.sh",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:all": "./scripts/test-all.sh",
     "clean": "rm -rf build node_modules/.cache",
+    "env:inject": "bash scripts/env-inject.sh",
+    "lucia:threads": "node scripts/lucia-threads.mjs",
     "mcpb:build": "npm run build && node scripts/build-mcpb.cjs",
-    "mcpb:validate": "echo 'MCPB validation - checking manifest structure' && node -e \"const fs = require('fs'); const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); console.log('Manifest valid:', manifest.name, manifest.version);\"",
-    "env:inject": "bash scripts/env-inject.sh"
+    "mcpb:validate": "echo 'MCPB validation - checking manifest structure' && node -e \"const fs = require('fs'); const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); console.log('Manifest valid:', manifest.name, manifest.version);\""
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
@@ -46,6 +67,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@noble/hashes": "^1.8.0",
     "@types/node": "^22.20.2",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
@@ -64,10 +86,10 @@
     "model-context-protocol",
     "ai",
     "claude",
-    "custom",
-    "jericho"
+    "analytics",
+    "luciverse"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }

@@ -89,3 +89,9 @@ Makefile
 *.bak
 *.swp
 *~
+
+# LuciVerse identity metadata (not part of the runtime bundle)
+.lucia/
+.luci-metadata
+.lds-vault-access
+examples/

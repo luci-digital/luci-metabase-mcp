@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "vault_backend": "1password",
+  "vault_name": "Repository-Access-luci-metabase-mcp",
+  "token_ttl_hours": 24,
+  "primary_override": "daryl-harris"
+}

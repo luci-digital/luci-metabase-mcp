@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "block_cache_bytes": 0,
+  "block_cache_count": 0,
+  "wal_entries": 0,
+  "wal_segments": 0,
+  "threads_total": 0,
+  "workflows_pending": 0,
+  "workflows_complete": 0,
+  "last_compaction_timestamp": null,
+  "last_retention_sweep_timestamp": null
+}

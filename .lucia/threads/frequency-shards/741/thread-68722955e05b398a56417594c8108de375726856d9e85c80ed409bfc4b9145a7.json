@@ -1,0 +1,16 @@
+{
+  "thread_id": "thread-68722955e05b398a56417594c8108de375726856d9e85c80ed409bfc4b9145a7",
+  "parts": [
+    "mcp",
+    "client-wiring"
+  ],
+  "links": [
+    {
+      "did": "did:lucidigital:luciverse-system-config:fd00:741:1::cab9",
+      "cid": "bafk-blake3-5c21a9f87b0d29618ad9350c66b33770a0fb7056ce07570ddd08c36f7f1e682b",
+      "frequency_hz": 741,
+      "timestamp_ns": 0,
+      "path": "documentation/MCP_SERVER_PATTERN.md"
+    }
+  ]
+}

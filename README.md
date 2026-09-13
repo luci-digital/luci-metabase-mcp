@@ -1,357 +1,179 @@
-# Metabase MCP Server
+# luci-metabase-mcp
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/jerichosequitin/metabase-mcp)
+[![CI](https://github.com/luci-digital/luci-metabase-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/luci-digital/luci-metabase-mcp/actions/workflows/ci.yml)
 
-**Version**: 1.0.1
+**Version**: 1.1.0
+**Tier**: LuciVerse COMN, 528 Hz (LDS 700.528)
+**Transport**: stdio only. Internal use. Not a public endpoint.
 
-**Repository**: [luci-digital/luci-metabase-mcp](https://github.com/luci-digital/luci-metabase-mcp)
+A [Model Context Protocol](https://modelcontextprotocol.io) server that gives
+AI agents optimized access to Metabase analytics: native search, detail
+retrieval with 75 to 90 percent token reduction, SQL and saved-card
+execution, and large exports (CSV, JSON, XLSX). It is the TypeScript
+reference implementation of the LuciVerse internal MCP server pattern
+(`luciverse-system-config/documentation/MCP_SERVER_PATTERN.md`).
 
-**Original Creator**: [Jericho Sequitin](https://github.com/jerichosequitin) (@jerichosequitin)
+## Quick start
 
-A high-performance Model Context Protocol server for AI integration with Metabase analytics platforms. Features intelligent caching, response optimization, and comprehensive data access tools.
-
-**Available as an MCP Bundle (MCPB) for Claude Desktop.**
-
----
-
-## Acknowledgments
-
-This project builds upon the exceptional foundation created by **Jericho Sequitin** ([@jerichosequitin](https://github.com/jerichosequitin)). His original [Metabase MCP Server](https://github.com/jerichosequitin/metabase-mcp) demonstrated the powerful potential of combining AI agents with business intelligence through the Model Context Protocol.
-
-**Original Contributions by Jericho Sequitin:**
-- Core MCP server architecture and tool implementation
-- Response optimization achieving 80-90% token reduction
-- Multi-layer caching system with intelligent TTL management
-- Dual authentication support (API key and email/password)
-- Large dataset export capabilities (CSV, JSON, XLSX)
-- Comprehensive error handling with agent guidance
-- Production-ready testing infrastructure (235 tests, 80% coverage)
-- Desktop Extension (DXT) packaging for Claude Desktop
-
-**Luci Digital Enhancements:**
-- Comprehensive observability patterns and monitoring documentation
-- Benefits guide for stakeholder understanding
-- Enhanced agent communication patterns and security models
-- Personal AI Container integration architecture
-- Swift Container Plugin integration for containerized deployments
-- Extended documentation for enterprise adoption
-
-We are deeply grateful for Jericho's pioneering work in making business intelligence accessible to AI agents. This fork continues his vision while adding enterprise-grade features and comprehensive documentation for broader adoption.
-
----
-
-## Installation Options
-
-#### Option 1: MCP Bundle (Recommended for Claude Desktop Users)
-
-1. Download `metabase-mcp.mcpb` from [Releases](https://github.com/luci-digital/luci-metabase-mcp/releases)
-2. Open the `.mcpb` file with Claude Desktop to install
-3. Configure your Metabase credentials in Claude Desktop's extension settings:
-   - **Metabase URL** (required)
-   - **Authentication**: Choose either API key OR email/password
-   - **Export Directory**: Customize where files are saved (defaults to Downloads/Metabase)
-   - **Optional**: Log level, cache TTL, and request timeout settings
-
-##### Benefits of MCP Bundle Installation
-
-- **Single-click installation**: No manual configuration files or command-line setup
-- **Automatic updates**: Claude Desktop manages bundle updates
-- **User-friendly settings**: Configure through Claude Desktop's UI
-- **Seamless integration**: Tools automatically available in your conversations
-
-#### Option 2: Manual Installation
-Follow the standard MCP server installation process detailed in the Local Development Setup section below.
-
-## Key Features
-
-- **High Performance**: Up to 90% token reduction through response optimization
-- **Unified Commands**: `list`, `retrieve`, `search`, `execute`, and `export` tools
-- **Smart Caching**: Multi-layer caching with configurable TTL
-- **Dual Authentication**: API key or email/password authentication
-- **Large Data Export**: Export up to 1M rows in CSV, JSON, and XLSX formats
-- **Configurable Export Directory**: Customize where files are saved
-
-## Available Tools
-
-The server exposes the following optimized tools for AI assistants:
-
-### Unified Core Tools
-- **`list`**: Fetch ALL records for a single resource type with highly optimized responses
-  - Supports: `cards`, `dashboards`, `tables`, `databases`, `collections`
-  - Returns only essential identifier fields for efficient browsing
-  - **Pagination support** for large datasets exceeding token limits (offset/limit parameters)
-  - Intelligent caching with performance metrics
-
-- **`retrieve`**: Get detailed information for specific items by ID
-  - Supports: `card`, `dashboard`, `table`, `database`, `collection`, `field`
-  - Concurrent processing with controlled batch sizes
-  - Aggressive response optimization (75-90% token reduction)*
-  - **Table pagination** for large databases exceeding 25k token limits
-
-- **`search`**: Unified search across all Metabase items using native search API
-  - Supports all model types with advanced filtering
-  - Search by name, ID, content, or database
-  - Includes dashboard questions and native query search
-
-### Query Execution Tools
-- **`execute`**: Unified command for executing SQL queries or saved cards (2K row limit)
-  - **SQL Mode**: Execute custom SQL queries with database_id and query parameters
-  - **Card Mode**: Execute saved Metabase cards with card_id parameter and optional filtering
-  - **Card Parameters**: Filter card results using `card_parameters` array with name/value pairs
-  - Enhanced with proper LIMIT clause handling and parameter validation
-  - Intelligent mode detection with strict parameter validation
-
-- **`export`**: Unified command for exporting large datasets (up to 1M rows)
-  - **SQL Mode**: Export custom SQL query results with database_id and query parameters
-  - **Card Mode**: Export saved Metabase card results with card_id parameter and optional filtering
-  - **Card Parameters**: Filter card results before export using `card_parameters` array
-  - Supports CSV, JSON, and XLSX formats with case-insensitive format handling
-  - Automatic file saving to configurable directory (defaults to ~/Downloads/Metabase/)
-
-### Utility Tools
-- **`clear_cache`**: Clear internal cache with granular control
-  - Supports model-specific cache clearing for both individual items and lists
-  - Individual item caches: `cards`, `dashboards`, `tables`, `databases`, `collections`, `fields`
-  - List caches: `cards-list`, `dashboards-list`, `tables-list`, `databases-list`, `collections-list`
-  - Bulk operations: `all`, `all-individual`, `all-lists`
-
-## Quick Start Examples
-
-```javascript
-// List all cards
-list({ model: "cards" })
-
-// Get detailed card information
-retrieve({ model: "card", ids: [1, 2, 3] })
-
-// Search for dashboards
-search({ query: "sales", models: ["dashboard"] })
-
-// Execute SQL query
-execute({
-  database_id: 1,
-  query: "SELECT * FROM users LIMIT 100"
-})
-
-// Export large dataset
-export({
-  database_id: 1,
-  query: "SELECT * FROM large_table",
-  format: "csv"
-})
-```
-
-## Configuration
-
-### Authentication Options
-
-**API Key (Recommended):**
-```bash
-METABASE_URL=https://your-metabase-instance.com
-METABASE_API_KEY=your_api_key
-```
-
-**Email/Password:**
-```bash
-METABASE_URL=https://your-metabase-instance.com
-METABASE_USER_EMAIL=your_email@example.com
-METABASE_PASSWORD=your_password
-```
-
-**Optional Settings:**
-```bash
-EXPORT_DIRECTORY=~/Downloads/Metabase  # Or ${DOWNLOADS}/Metabase
-LOG_LEVEL=info
-```
-
-## Manual Installation (Developers)
-
-### Prerequisites
-- Node.js 18.0.0 or higher
-- Active Metabase instance
-
-### Setup
-
-```bash
-# Clone and build
-git clone https://github.com/luci-digital/luci-metabase-mcp.git
-cd luci-metabase-mcp
+```sh
 npm install
-npm run build
+npm run build:fast
+npm run env:inject       # op inject -i .env.example -o .env (needs the 1Password CLI)
+npm start                # stdio transport; the client normally launches this for you
 ```
 
-### Environment Configuration
+Configuration is all environment variables; see `.env.example`. Values may be
+literal or `op://vault/item/field` references, which the server resolves at
+startup with `op read` (the 1Password CLI must be on PATH). A malformed or
+unresolvable reference aborts startup; the literal reference is never used as
+a credential.
 
-Create a `.env` file:
+## Tools
 
-```bash
-# Required
-METABASE_URL=https://your-metabase-instance.com
+| Tool | Purpose |
+|------|---------|
+| `search` | Native Metabase search across cards, dashboards, tables, collections, databases, and more, with model filtering, ID lookup, and native-query search. Use first. |
+| `retrieve` | Details for up to 50 items of one model (`card`, `dashboard`, `table`, `database`, `collection`, `field`) with concurrent fetches, caching, and table pagination for large databases. |
+| `list` | Every record of one model type (`cards`, `dashboards`, `tables`, `databases`, `collections`) reduced to identifier fields, with offset and limit pagination. |
+| `execute` | Run a SQL query (`database_id` + `query`) or a saved card (`card_id`, optional `card_parameters`). Up to 2000 rows. |
+| `export` | Export a SQL query or saved card through the Metabase export endpoints (up to 1M rows) as CSV, JSON, or XLSX into `EXPORT_DIRECTORY`. |
+| `clear_cache` | Clear item caches, list caches, or everything. |
 
-# Choose authentication method
-METABASE_API_KEY=your_api_key  # Recommended
-# OR
-# METABASE_USER_EMAIL=your_email@example.com
-# METABASE_PASSWORD=your_password
+Every tool error returns agent guidance, a recovery action, and whether a
+retry is safe. See [docs/enhanced-error-handling.md](docs/enhanced-error-handling.md).
 
-# Optional
-EXPORT_DIRECTORY=~/Downloads/Metabase  # Or ${DOWNLOADS}/Metabase
-LOG_LEVEL=info
-CACHE_TTL_MS=600000 # 10 minutes by default
-REQUEST_TIMEOUT_MS=600000 # 10 minutes by default
+## Resources
+
+Read-only views by ID: `metabase://card/{id}`, `metabase://dashboard/{id}`,
+`metabase://database/{id}`, `metabase://table/{id}`, `metabase://field/{id}`,
+`metabase://collection/{id}`, `metabase://metric/{id}`, and
+`metabase://recent/{model}`. Listing resources returns root collections, the
+current user's personal collection, and all non-sample databases.
+
+## Prompts
+
+`execute_card` and `export_card` walk an agent through running or exporting a
+parameterized saved card.
+
+## Wire into Claude Code
+
+```sh
+claude mcp add luci-metabase-mcp -- node /absolute/path/to/luci-metabase-mcp/build/src/index.js
 ```
 
-### Claude Desktop Integration
+or copy `examples/mcp.json.example` to `.mcp.json` in your project:
 
-To integrate with Claude Desktop, you'll need to configure the MCP server in Claude's configuration file.
-
-#### Configuration File Locations:
-- **MacOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
-
-#### For Local Development:
 ```json
 {
   "mcpServers": {
-    "metabase-mcp": {
-      "command": "/Users/your-username/path/to/luci-metabase-mcp/build/src/index.js",
+    "luci-metabase-mcp": {
+      "command": "node",
+      "args": ["/absolute/path/to/luci-metabase-mcp/build/src/index.js"],
       "env": {
-        "METABASE_URL": "https://your-metabase-instance.com",
-        "METABASE_API_KEY": "your_api_key_here",
-        "LOG_LEVEL": "info",
-        "CACHE_TTL_MS": "600000",
-        "EXPORT_DIRECTORY": "/path/to/your/export/directory"
+        "METABASE_URL": "op://Lucia-AI-Secrets/Metabase/url",
+        "METABASE_API_KEY": "op://Lucia-AI-Secrets/Metabase/api_key"
       }
     }
   }
 }
 ```
 
-#### Important Notes:
-- **Use absolute paths** for local development (e.g., `/Users/username/Documents/luci-metabase-mcp/build/src/index.js`)
-- **Replace `your-username`** with your actual username
-- **Replace `path/to/luci-metabase-mcp`** with the actual path to your cloned repository
-- **No need to run the server manually** - Claude Desktop will automatically invoke and manage the MCP server via STDIO
-- **Never commit real credentials** to version control
-- **Restart Claude Desktop** after making configuration changes
+Claude Desktop uses the same block in `claude_desktop_config.json`
+(`~/Library/Application Support/Claude/` on macOS, `%APPDATA%/Claude/` on
+Windows). Restart the client after editing.
 
-#### Troubleshooting:
-- Ensure the path to `build/src/index.js` is correct and the file exists
-- Verify your Metabase credentials are valid
-- Check Claude Desktop's logs for any connection errors
-- Make sure the server builds successfully with `npm run build`
+## Wire into Zed
 
-## Advanced Usage
+Merge `examples/zed-settings.example.json` into `~/.config/zed/settings.json`
+(`context_servers.luci-metabase-mcp`).
 
-### Card Parameters
+## Quick check
 
-For executing saved cards with filters, use the `card_parameters` array:
-
-```javascript
-execute({
-  card_id: 42,
-  card_parameters: [
-    {
-      "id": "param-uuid",
-      "slug": "start_date",
-      "target": ["dimension", ["template-tag", "start_date"]],
-      "type": "date/all-options",
-      "value": "2024-01-01~2024-12-31"
-    }
-  ]
-})
+```sh
+npm run inspector        # MCP Inspector against the built server
 ```
 
-*Get parameter structure by retrieving card details first.*
+## Configuration
 
-### Pagination
+| Variable | Required | Notes |
+|----------|----------|-------|
+| `METABASE_URL` | yes | Metabase base URL, literal or `op://` reference |
+| `METABASE_API_KEY` | one of | API key authentication (recommended) |
+| `METABASE_USER_EMAIL`, `METABASE_PASSWORD` | one of | Session authentication |
+| `LOG_LEVEL` | no | `debug`, `info` (default), `warn`, `error`, `fatal` |
+| `CACHE_TTL_MS` | no | Cache lifetime, default 600000 |
+| `REQUEST_TIMEOUT_MS` | no | Request timeout, default 600000 |
+| `EXPORT_DIRECTORY` | no | Export location, default `${DOWNLOADS}/Metabase` |
+| `GENESIS_BOND`, `CONSCIOUSNESS_FREQUENCY`, `COHERENCE_THRESHOLD`, `LUCIVERSE_COMPONENT` | no | LuciVerse tier metadata, passed through |
 
-```javascript
-// List with pagination
-list({ model: "cards", limit: 100, offset: 0 })
+Secrets live in 1Password. The runtime vault is `Lucia-AI-Secrets`
+(item `Metabase`, fields `url`, `api_key`, `password`); repository access is
+`Repository-Access-luci-metabase-mcp`. See [docs/onepassword.md](docs/onepassword.md).
 
-// Large database tables
-retrieve({ model: "database", ids: [1], table_limit: 20 })
+## Container (internal, optional)
+
+```sh
+docker build -t luci-metabase-mcp:local .      # or podman build
+docker run --rm -i --env-file .env luci-metabase-mcp:local
 ```
 
+The image opens no ports and is never pushed to a registry. A stdio server
+has no service unit; the client owns the process.
 
-## Debugging
+## Develop
 
-Use the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) for development:
-
-```bash
-npm run inspector
+```sh
+npm run dev:watch        # rebuild and restart on change
+npm run validate         # type-check, lint, format
+npm run test:coverage    # vitest with the enforced coverage gate
+npm run verify           # validate plus CHANGELOG format check
+make verify              # the same, plus shell syntax checks
+npm run lucia:threads -- --check   # regenerate .lucia thread links and diff
+npm run mcpb:build       # local MCP Bundle for Claude Desktop (uploaded by CI as an artifact on tags)
 ```
 
-## Docker Support
+Layout:
 
-```bash
-# Build and test
-docker build -t metabase-mcp .
-docker run -e METABASE_URL=https://metabase.example.com \
-           -e METABASE_API_KEY=your_api_key \
-           metabase-mcp
+```
+src/
+  index.ts              entry: global error handlers, stdio transport
+  server.ts             McpServer wiring: tools, resources, prompts, instructions
+  tools/                zod tool schemas, registration, result helpers
+  handlers/             search, list, retrieve, execute, export, clearCache, resources, prompts
+  api.ts                Metabase HTTP client with caching
+  config.ts             environment validation and op:// resolution
+  logger.ts             JSON-lines stderr logger
+  utils/                error factory, validation, file utilities, package info
+tests/                  vitest; handlers are tested against a mocked API client
+docs/responses/         raw versus optimized response references (update on every optimization change)
+.lucia/                 LuciVerse identity, peers, and cross-repo thread links
+examples/               client wiring examples for Claude Code and Zed
 ```
 
-*Note: Docker is primarily for development/testing.*
+See [ARCHITECTURE.md](ARCHITECTURE.md), [CLAUDE.md](CLAUDE.md), and
+[AGENTS.md](AGENTS.md).
 
-## Development
+## LuciVerse alignment
 
-### Testing
+- Internal only: stdio transport, no listening port, no public registry, no
+  release artifacts.
+- Identity: `did:luci:luci-metabase-mcp`, 528 Hz, LDS 700.528, declared in
+  `.lucia/config.toml`; peers are `luciverse-system-config` and
+  `lucia_tooling_omzsh`.
+- Registered in `luciverse-system-config/documentation/CLAUDE.md` (MCP Agent
+  Registration) and `NETWORK_REFERENCE.md` (MCP Servers); threaded to
+  `aifam-mcp`, `luci-mcp`, `luciverse-mcp-server.py`, and the `.mcp-bundles`
+  specs through `.lucia/threads`.
+- Follows the `aifam-mcp` house pattern: `McpServer` with zod schemas,
+  guarded handlers, stderr JSON logging, `op inject` secrets, path-scoped CI.
 
-```bash
-# Run tests
-npm test
+## Acknowledgments
 
-# Coverage report
-npm run test:coverage
+This repository is a fork of [Jericho Sequitin's Metabase MCP Server](https://github.com/jerichosequitin/metabase-mcp),
+which contributed the handler architecture, response optimization, caching,
+dual authentication, export pipeline, and the agent-guidance error system.
+MIT licensed; see [LICENSE](LICENSE).
 
-# Development tools
-npm run inspector  # MCP Inspector for debugging
-```
+---
 
-### Building MCPB Package
-
-```bash
-# Build for distribution
-npm run mcpb:build
-```
-
-Creates `metabase-mcp-{version}.mcpb` (e.g., `metabase-mcp-1.0.1.mcpb`) ready for GitHub Releases.
-
-## Documentation
-
-### Core Documentation
-- **[CLAUDE.md](CLAUDE.md)** - Claude Code agent development guidelines and project architecture
-- **[AGENTS.md](AGENTS.md)** - AI agent integration patterns, error handling, and multi-agent communication
-- **[CONTAINER-RUNTIME.md](CONTAINER-RUNTIME.md)** - Podman/Docker containerized runtime with Swift bridge
-- **[docs/enhanced-error-handling.md](docs/enhanced-error-handling.md)** - Enhanced error handling with agent guidance
-
-### Agent Integration
-This project includes comprehensive AI agent support:
-- Agent-specific error guidance via `agentGuidance` field
-- Multi-agent communication patterns (MCP, WebSocket, Bridge)
-- Recovery action patterns for automatic error handling
-- Repository management agents for auto-sync
-
-See [AGENTS.md](AGENTS.md) for complete agent integration documentation.
-
-## Security Considerations
-
-- **API Key Authentication**: Recommended for production environments
-- **Credential Security**: Environment variable-based configuration
-- **Docker Secrets**: Support for Docker secrets and environment variables
-- **Network Security**: Apply appropriate network security measures
-- **Rate Limiting**: Built-in request rate limiting and timeout handling
-
-## License
-
-This project is licensed under the MIT License.
-
-## Project Lineage
-
-This repository is a fork of [Jericho Sequitin's original Metabase MCP Server](https://github.com/jerichosequitin/metabase-mcp), enhanced with enterprise features, comprehensive documentation, and advanced observability patterns. Both projects remain open source and share the goal of making business intelligence accessible to AI agents.
-
-**For the original implementation**, see: https://github.com/jerichosequitin/metabase-mcp
-
-**For enterprise enhancements and extended documentation**, see: https://github.com/luci-digital/luci-metabase-mcp (this repository)
+LDS 700.528 @ 528 Hz. Genesis Bond: ACTIVE.

@@ -1,0 +1,30 @@
+[default]
+ttl_days = 180
+
+[tiers.963]
+ttl_days = -1
+label = "permanent"
+
+[tiers.852]
+ttl_days = 365
+label = "annual"
+
+[tiers.741]
+ttl_days = 365
+label = "annual"
+
+[tiers.639]
+ttl_days = 180
+label = "semi-annual"
+
+[tiers.528]
+ttl_days = 180
+label = "semi-annual"
+
+[tiers.432]
+ttl_days = 90
+label = "quarterly"
+
+[compaction]
+interval_hours = 24
+min_block_size = 262144

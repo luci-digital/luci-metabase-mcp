@@ -1,0 +1,37 @@
+{
+  "thread_id": "thread-3dc954609605b3ab75986eb4e0bcba5c89143685b1d72842454d63524b0897af",
+  "parts": [
+    "mcp",
+    "secrets-op-inject"
+  ],
+  "links": [
+    {
+      "did": "did:luci:luci-metabase-mcp",
+      "cid": "bafk-blake3-d4fc010232361fe592d3a5810e3ddc3e1976ff90a254408edcd62049b289f911",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": ".env.example"
+    },
+    {
+      "did": "did:luci:luci-metabase-mcp",
+      "cid": "bafk-blake3-874a12eeb05c65b7dd5b648fee533b963b6d6886243f03a2e7490f822c3a09a6",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "src/utils/onePassword.ts"
+    },
+    {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "cid": "bafk-blake3-cfd051aa6f5671a04ef3ed2b6700b6fbf8f21a7c43eb93265f81c77c6f359e5c",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "aifam-mcp/.env.example"
+    },
+    {
+      "did": "did:luci:lucia-tooling-omzsh",
+      "cid": "bafk-blake3-58e09fdb45855c5f41e3de810c04d14ad4e17472289bea02e7aea99416e40a67",
+      "frequency_hz": 528,
+      "timestamp_ns": 0,
+      "path": "scripts/init-env-with-op.sh"
+    }
+  ]
+}
