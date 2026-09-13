@@ -14,7 +14,7 @@
     },
     {
       "did": "did:luci:lucia-tooling-omzsh",
-      "cid": "bafk-blake3-a390a3c8f802538b274695a1ba488f7ae5511f9289df26b5e6085bd44982aaf3",
+      "cid": "bafk-blake3-2935f8494bd5ea0c1cd6d24ff78f03f02a348e75b7eefc5dbcab2a5c547125e7",
       "frequency_hz": 528,
       "timestamp_ns": 0,
       "path": "modules/scm/luci-vcs/examples/mcp.json.example"
