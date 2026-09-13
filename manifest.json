@@ -84,7 +84,7 @@
     "metabase_api_key": {
       "type": "string",
       "title": "API Key",
-      "description": "Metabase API Key. Leave empty for email/password authentication.",
+      "description": "Metabase API key (recommended). Leave empty only if you fill in the email and password below.",
       "required": false,
       "sensitive": true,
       "default": ""

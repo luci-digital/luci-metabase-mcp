@@ -35,6 +35,30 @@ describe('validateEnvironment', () => {
     );
   });
 
+  it('treats empty-string optional variables as unset (Claude Desktop bundle defaults)', () => {
+    const cfg = validateEnvironment({
+      ...base,
+      METABASE_USER_EMAIL: '',
+      METABASE_PASSWORD: '',
+      LOG_LEVEL: '',
+    });
+    expect(cfg.METABASE_API_KEY).toBe('plain-key');
+    expect(cfg.METABASE_USER_EMAIL).toBeUndefined();
+    expect(cfg.METABASE_PASSWORD).toBeUndefined();
+    expect(cfg.LOG_LEVEL).toBe('info');
+  });
+
+  it('still fails when every credential is empty', () => {
+    expect(() =>
+      validateEnvironment({
+        METABASE_URL: 'https://mb.example.com',
+        METABASE_API_KEY: '',
+        METABASE_USER_EMAIL: '',
+        METABASE_PASSWORD: '',
+      })
+    ).toThrow(/Environment validation failed[\s\S]*METABASE_API_KEY/);
+  });
+
   it('rejects an invalid URL and a non-positive TTL', () => {
     expect(() => validateEnvironment({ ...base, METABASE_URL: 'not a url' })).toThrow(/valid URL/);
     expect(() => validateEnvironment({ ...base, CACHE_TTL_MS: '-5' })).toThrow(/CACHE_TTL_MS/);

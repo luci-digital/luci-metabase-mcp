@@ -8,6 +8,9 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+// Version of the @anthropic-ai/mcpb CLI used to pack the bundle.
+const MCPB_CLI_VERSION = process.env.MCPB_CLI_VERSION || 'latest';
+
 function log(message) {
   console.log(`[MCPB Builder] ${message}`);
 }
@@ -29,7 +32,8 @@ function buildMcpbPackage() {
     log(`Building: ${manifest.name} v${manifest.version}`);
 
     // Build the MCPB package
-    const mcpbCommand = `mcpb pack . ${outputFile}`;
+    // npx fetches the pinned CLI on demand, so no global install is needed.
+    const mcpbCommand = `npx --yes @anthropic-ai/mcpb@${MCPB_CLI_VERSION} pack . ${outputFile}`;
     log(`Executing: ${mcpbCommand}`);
 
     execSync(mcpbCommand, {
