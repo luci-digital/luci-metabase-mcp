@@ -36,7 +36,8 @@
     "test:all": "./scripts/test-all.sh",
     "clean": "rm -rf build node_modules/.cache",
     "mcpb:build": "npm run build && node scripts/build-mcpb.cjs",
-    "mcpb:validate": "echo 'MCPB validation - checking manifest structure' && node -e \"const fs = require('fs'); const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); console.log('Manifest valid:', manifest.name, manifest.version);\""
+    "mcpb:validate": "echo 'MCPB validation - checking manifest structure' && node -e \"const fs = require('fs'); const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); console.log('Manifest valid:', manifest.name, manifest.version);\"",
+    "env:inject": "bash scripts/env-inject.sh"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

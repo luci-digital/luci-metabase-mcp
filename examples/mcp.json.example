@@ -1,0 +1,14 @@
+{
+  "_comment": "Copy to your project root as .mcp.json (Claude Code) to register luci-metabase-mcp over stdio. Build first: npm run build:fast. Replace /absolute/path with the clone location; the op:// values are resolved by the server at startup.",
+  "mcpServers": {
+    "luci-metabase-mcp": {
+      "command": "node",
+      "args": ["/absolute/path/to/luci-metabase-mcp/build/src/index.js"],
+      "env": {
+        "METABASE_URL": "op://Lucia-AI-Secrets/Metabase/url",
+        "METABASE_API_KEY": "op://Lucia-AI-Secrets/Metabase/api_key",
+        "LOG_LEVEL": "info"
+      }
+    }
+  }
+}
